@@ -81,18 +81,14 @@ def htable_buckets_str(table):
         0004->
     where parrt:99 indicates an association of (parrt,99) in bucket 3.
     """
-    output = ''
-
+    bucket_str_list = []
     for i in range(len(table)):
-        output += ('000' + str(i) + '->')
+        bucket_key_values = []
         for association in table[i]:
             if association and association[0] and association[1]:
-                output += (str(association[0]) + ':' + str(association[1]) + ', ')
-        if output[-2:] == ', ':
-            output = output[:-2]
-        output += '\n'
-
-    return output
+                bucket_key_values.append(str(association[0]) + ':' + str(association[1]))
+        bucket_str_list.append('000' + str(i) + '->' + ', '.join(bucket_key_values))
+    return '\n'.join(bucket_str_list) + '\n'
 
 
 def htable_str(table):
@@ -102,15 +98,12 @@ def htable_str(table):
     insertion order within each bucket. The insertion order is
     guaranteed when you append to the buckets in htable_put().
     """
-    output = '{'
+    key_values = []
+
     for bucket in table:
         if bucket:
             for association in bucket:
                 key = association[0]
                 value = association[1]
-                output += (str(key) + ':' + str(value) + ', ')
-
-    if output[-2:] == ', ':
-        output = output[:-2]
-    output += '}'
-    return output
+                key_values.append(str(key) + ':' + str(value))
+    return '{' + ', '.join(key_values) + '}'
