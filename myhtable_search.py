@@ -7,44 +7,44 @@ from words import get_text, words
 
 
 def myhtable_create_index(files):
-    """
-    Build an index from word to set of document indexes
-    This does the exact same thing as create_index() except that it uses
-    your htable.  As a number of htable buckets, use 4011.
-    Returns a list-of-buckets hashtable representation.
-    """
-    index = htable(4011)
+        
+    index = htable(4011) #create empty htable with 4011 buckets
 
     for filename in files:
-        word_list = set(words(get_text(filename)))
+        word_list = set(words(get_text(filename))) 
         for word in word_list:
+        #get the file index list which contains the word
             curr_value = htable_get(index, word)
-            if curr_value:
-                curr_value.add(files.index(filename))
+        #if the curr_value exist, we will add the file index into the set
+            if curr_value: 
+                curr_value.add(files.index(filename)) 
                 value = curr_value
             else:
-                value = set()
+        #if none, we will define a empty set,then add the index into the set
+                value = set() 
                 value.add(files.index(filename))
-            htable_put(index, word, value)
+        #put the result back to the hash table
+            htable_put(index, word, value) 
     return index
 
 
 def myhtable_index_search(files, index, terms):
-    """
-    This does the exact same thing as index_search() except that it uses your htable.
-    I.e., use htable_get(index, w) not index[w].
-    """
 
-    matches = []
+    matches = [] #create empty list
 
     for term in terms:
-        term_matches = htable_get(index, term)
-        if not matches:
+        term_matches = htable_get(index, term) 
+        #if match is empty
+        if not matches: 
             matches = term_matches
+        #if match is not empty
         else:
             matches = set(matches).intersection(set(term_matches))
-    if not matches:
+    #if matches is empty after checking, return empty list        
+    if not matches: 
         return []
-    filenames = [files[match] for match in matches]
+    #if matches has common index, return all files in matches
+    filenames = [files[match] for match in matches] 
+    
     return filenames
 
